@@ -57,31 +57,35 @@ export class MediaService {
       const fileName = uuidv4() + '.jpg';
       const filePath = path.resolve(__dirname, '../../uploads');
 
-      if (!fs.existsSync(filePath)) {
-        fs.mkdirSync(filePath, { recursive: true });
-      }
 
       const oldFilePath = path.join(filePath, image.image);
-
       if (fs.existsSync(oldFilePath)) {
         fs.unlinkSync(oldFilePath); // Delete the old image file
       }
 
-
-
       fs.writeFileSync(path.join(filePath, fileName), file.buffer);
 
-      image.image = fileName; // Update the image property in your entity
+      this.mediaObjectRepository.merge(image, {image: fileName});
+      return await this.mediaObjectRepository.save(image);
 
-      const updatedMediaObject = await this.mediaObjectRepository.save(image);
 
-      return updatedMediaObject;
     } catch (e) {
       throw new HttpException('Error happened in updating images', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} media`;
+  async remove(id: number) {
+    const image = await this.mediaObjectRepository.findOneBy({id});
+    if(!image) {
+      throw new HttpException("Image is not found", HttpStatus.NOT_FOUND);
+    }
+    const filePath = path.resolve(__dirname, '../../uploads');
+    const oldFilePath = path.join(filePath, image.image);
+    if (fs.existsSync(oldFilePath)) {
+      fs.unlinkSync(oldFilePath); // Delete the image file
+    }
+    await this.mediaObjectRepository.remove(image);
+
+    return true;
   }
 }

@@ -27,8 +27,8 @@ export class MediaController {
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor("image"))
-  create(@UploadedFile() image) {
-    return this.mediaService.create(image);
+  create(@UploadedFile() createMediaDto: CreateMediaDto) {
+    return this.mediaService.create(createMediaDto);
   }
 
   @Get()
@@ -48,12 +48,19 @@ export class MediaController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @UploadedFile() image) {
-    return this.mediaService.update(id, image);
+  @Roles("ROLE_ADMIN")
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor("image"))
+  update(@Param('id') id: number, @UploadedFile() updateMediaDto: UpdateMediaDto) {
+    return this.mediaService.update(id, updateMediaDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.mediaService.remove(+id);
+  @Roles("ROLE_ADMIN")
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
+  remove(@Param('id') id: number) {
+    return this.mediaService.remove(id);
   }
 }
