@@ -60,6 +60,6 @@ export class UserService {
   }
 
   async findOneByEmail(email: string) {
-    return await this.usersRepository.findOne({where: {email}, relations: ["roles"]});
+    return await this.usersRepository.findOne({where: {email}, relations: ["roles", "person"]});
   }
 }

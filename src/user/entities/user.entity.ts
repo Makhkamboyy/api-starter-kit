@@ -1,19 +1,14 @@
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Role } from "../../role/entities/role.entity";
+import { Person } from "../../person/entities/person.entity";
 
 @Entity({name: 'users'})
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({type: 'varchar', nullable: false})
-  name: string;
-
-  @Column({type: 'varchar', nullable: false})
-  sname: string;
-
-  @Column({type: 'varchar', nullable: false})
-  phone: string;
+  @Column({name: "personId"})
+  personId: number;
 
   @Column({type: 'varchar', nullable: false, unique: true})
   email: string;
@@ -36,4 +31,9 @@ export class User {
   @ManyToMany(() => Role)
   @JoinTable({ name: 'user_roles' })
   roles: Role[];
+
+  @ManyToOne(() => Person, person => person.users, {
+    onDelete: 'CASCADE'
+  })
+  person: Person;
 }

@@ -7,11 +7,11 @@ async function start() {
   const PORT = process.env.PORT || 5000;
   const app = await NestFactory.create(AppModule, {cors: true});
   const config = new DocumentBuilder()
-    .setTitle('Joby')
-    .setDescription('The joby API description')
+    .setTitle('Api-Starter')
+    .setDescription('Ap starter API description')
     .setVersion('1.0')
     .addBearerAuth()
-    .addTag('joby')
+    .addTag('api-starter')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

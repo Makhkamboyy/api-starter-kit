@@ -6,6 +6,7 @@ import { CurrentUser } from "../user/current.user.decorator";
 import { User } from "../user/entities/user.entity";
 import { JwtAuthGuard } from "./jwt-auth.guard";
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { CreateUserPersonDto } from "../user/dto/create-user-person.dto";
 
 
 @ApiTags("Auth")
@@ -24,8 +25,8 @@ export class AuthController {
   @ApiOperation({summary: "Create a user registration"})
   @ApiResponse({status: 200, type: User})
   @Post("/registration")
-  register(@Body() createUserDto: CreateUserDto) {
-    return this.authService.register(createUserDto);
+  register(@Body() createUserPersonDto: CreateUserPersonDto) {
+    return this.authService.register(createUserPersonDto);
   }
 
 

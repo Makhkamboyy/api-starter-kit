@@ -5,10 +5,13 @@ import * as bcrypt from "bcryptjs";
 import { JwtService } from "@nestjs/jwt";
 import { User } from "../user/entities/user.entity";
 import { CreateUserDto } from "../user/dto/create-user.dto";
+import { PersonService } from "../person/person.service";
+import { CreatePersonDto } from "../person/dto/create-person.dto";
+import { CreateUserPersonDto } from "../user/dto/create-user-person.dto";
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UserService, private jwtService: JwtService) {
+  constructor(private usersService: UserService, private personsService: PersonService, private jwtService: JwtService) {
   }
 
   async login(loginUserDto: LoginUserDto) {
@@ -18,8 +21,17 @@ export class AuthService {
   }
 
 
-  async register(createUserDto: CreateUserDto) {
-    const user = await this.usersService.create(createUserDto);
+  async register(createUserPersonDto: CreateUserPersonDto) {
+    const person = await this.personsService.create({
+      name: createUserPersonDto.name,
+      sname: createUserPersonDto.sname,
+      phone: createUserPersonDto.phone
+    });
+    const user = await this.usersService.create({
+      personId: person.id,
+      email: createUserPersonDto.email,
+      password: createUserPersonDto.password
+    });
 
     return await this.generateToken(user);
   }

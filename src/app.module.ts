@@ -11,6 +11,8 @@ import { MediaModule } from './media/media.module';
 import { Media } from "./media/entities/media.entity";
 import * as path from "path";
 import {ServeStaticModule} from "@nestjs/serve-static";
+import { PersonModule } from './person/person.module';
+import { Person } from "./person/entities/person.entity";
 
 @Module({
   imports: [
@@ -24,7 +26,7 @@ import {ServeStaticModule} from "@nestjs/serve-static";
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      entities: [User, Role, Media],
+      entities: [User, Role, Media, Person],
       synchronize: true,
     }),
     ServeStaticModule.forRoot({
@@ -34,6 +36,7 @@ import {ServeStaticModule} from "@nestjs/serve-static";
     RoleModule,
     AuthModule,
     MediaModule,
+    PersonModule,
   ],
   controllers: [],
   providers: [],
